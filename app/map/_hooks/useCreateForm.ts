@@ -32,6 +32,7 @@ export default function useCreateForm(toggleModal: () => void, formatArray: () =
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ContentField>();
   const queryClient = useQueryClient();
@@ -88,5 +89,5 @@ export default function useCreateForm(toggleModal: () => void, formatArray: () =
     toggleModal();
   }
 
-  return { register, setValue, handleSubmit, onSubmit, cancelForm, errors: errors as Errors };
+  return { register, setValue, handleSubmit, onSubmit, cancelForm, watch, errors: errors as Errors };
 }

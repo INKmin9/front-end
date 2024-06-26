@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FieldValues, useForm, UseFormRegister } from 'react-hook-form';
+import { FieldValues, UseFormRegister } from 'react-hook-form';
 
 import { APIProvider } from '@vis.gl/react-google-maps';
 import classNames from 'classnames/bind';
@@ -52,14 +52,6 @@ enum SUB_CATEGORY {
 }
 
 export default function WritePost() {
-  const { watch } = useForm();
-
-  const category = watch('category');
-  const title = watch('title');
-  const autocompleteValue = watch('autocomplete');
-
-  const isBlobButtonActive = category && title && autocompleteValue;
-
   const GOOGLE_MAP_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || '';
   const { toggleModal } = useModalStore();
 
@@ -89,7 +81,10 @@ export default function WritePost() {
   }
   // useCreateForm을 호출하는 시점에서 selectedCategories를 인자로 넘기도록 수정
 
-  const { errors, register, handleSubmit, onSubmit, cancelForm, setValue } = useCreateForm(toggleModal, formatArray);
+  const { errors, register, handleSubmit, onSubmit, cancelForm, setValue, watch } = useCreateForm(
+    toggleModal,
+    formatArray,
+  );
 
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
 
@@ -150,6 +145,7 @@ export default function WritePost() {
                         subcategory={subcategory}
                         onClick={() => handleSubCategoryClick(category, subcategory)}
                         selectedSubCategories={selectedCategories[category].subCategories}
+                        // watch={watch}
                       />
                     ))}
                   </div>
@@ -166,6 +162,7 @@ export default function WritePost() {
             placeholder='제목은 필수입니다'
             maxLength={20}
             errors={errors}
+            watch={watch}
           />
           <PostModalInput
             register={register as unknown as UseFormRegister<FieldValues>}
@@ -192,7 +189,7 @@ export default function WritePost() {
       </div>
       <div className={cx('post-footer')}>
         <BlobButton text='취소' type='button' color='button-gray-outlined' onClick={cancelForm} />
-        <BlobButton text='BLOB' type='submit' color='button-colord-contain' disabled={!isBlobButtonActive} />
+        <BlobButton text='BLOB' type='submit' color='button-colord-contain' />
       </div>
     </form>
   );
